@@ -1,30 +1,40 @@
-import React, { useState } from "react";
+import React from "react";
 import { AppWrapper } from "./styles/App";
 import Home from "./components/Home";
 import "./utils/firebase";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { ThemeProvider } from "styled-components";
 import { theme } from "./theme/theme";
-
+import useLocalStorage from "use-local-storage";
+import { useEffect } from "react/cjs/react.development";
 const provider = new GoogleAuthProvider();
 
 function App() {
-  const [toggle, setToggle] = useState(false);
+  const defaults = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const [toggle, setToggle] = useLocalStorage(
+    "theme",
+    defaults ? "dark" : "light"
+  );
+
   const auth = getAuth();
+
   const signInWithGooge = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
-        console.log(result);
-        // GoogleAuthProvider.credentialFromResult(result);
+        GoogleAuthProvider.credentialFromResult(result);
       })
       .catch((error) => {
         console.log(error);
-        // GoogleAuthProvider.credentialFromError(error);
+        GoogleAuthProvider.credentialFromError(error);
       });
   };
 
+  useEffect(() => {
+    document.getElementsByTagName("html")[0].setAttribute("data-theme", toggle);
+  }, [toggle]);
+
   return (
-    <ThemeProvider theme={{ ...theme, mode: toggle ? "dark" : "light" }}>
+    <ThemeProvider theme={theme}>
       <AppWrapper>
         <Home
           signInWithGoogle={signInWithGooge}
