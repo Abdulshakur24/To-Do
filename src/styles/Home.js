@@ -15,6 +15,11 @@ export const HomeWrapper = styled.div`
       justify-self: flex-end;
     }
 
+    .right {
+      display: flex;
+      align-items: center;
+    }
+
     .menu-bar {
       margin-left: 1rem;
       ul {
@@ -23,7 +28,7 @@ export const HomeWrapper = styled.div`
           transition: all 200ms ease-in-out;
           width: 26px;
           height: 2px;
-          background-color: ${(props) => props.theme.colors.accent1};
+          background-color: var(--text-primary);
           list-style: none;
           transform-origin: 3px 1px;
           &:not(:last-child) {
